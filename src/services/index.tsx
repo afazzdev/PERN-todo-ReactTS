@@ -3,9 +3,11 @@ export interface ITodo {
   todo_id: string;
 }
 
+const API = process.env.REACT_APP_API;
+
 const onSubmitForm = async (body: object, cb: (res: object) => void) => {
   try {
-    const response = await fetch('http://localhost:5000/todos', {
+    const response = await fetch(API + 'todos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +24,7 @@ const onSubmitForm = async (body: object, cb: (res: object) => void) => {
 
 const onDelete = async (id: string, cb: (id: string) => void) => {
   try {
-    const res = await fetch('http://localhost:5000/todos/' + id, {
+    const res = await fetch(API + 'todos/' + id, {
       method: 'DELETE',
     }).then((json) => json.json());
 
@@ -35,9 +37,7 @@ const onDelete = async (id: string, cb: (id: string) => void) => {
 
 const getTodos = async (cb: (data: ITodo[]) => void) => {
   try {
-    const res = await fetch('http://localhost:5000/todos').then((json) =>
-      json.json(),
-    );
+    const res = await fetch(API + 'todos').then((json) => json.json());
 
     cb(res.data as ITodo[]);
     console.log(res.data);
@@ -52,7 +52,7 @@ const updateDesc = async (
   cb: Function = () => {},
 ) => {
   try {
-    const res = await fetch('http://localhost:5000/todos/' + id, {
+    const res = await fetch(API + 'todos/' + id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

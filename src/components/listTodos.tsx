@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import EditTodo from './editTodo';
 import { onDelete } from '../services';
 import { ITodos } from '../App';
