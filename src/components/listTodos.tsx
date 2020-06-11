@@ -8,6 +8,18 @@ type IData = {
 const ListTodos = () => {
   const [data, setData] = useState<IData[]>([]);
 
+  const onDelete = async (id: string) => {
+    try {
+      const res = await fetch('http://localhost:5000/todos/' + id, {
+        method: 'DELETE',
+      }).then((json) => json.json());
+      setData(data.filter((el) => el.todo_id !== id));
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getTodos = async () => {
     try {
       const res = await fetch('http://localhost:5000/todos').then((json) =>
@@ -43,7 +55,12 @@ const ListTodos = () => {
                 <button className='btn'>Edit</button>
               </td>
               <td>
-                <button className='btn btn-danger'>Delete</button>
+                <button
+                  className='btn btn-danger'
+                  onClick={() => onDelete(el.todo_id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
