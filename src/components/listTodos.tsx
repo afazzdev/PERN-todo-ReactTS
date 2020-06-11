@@ -1,42 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import EditTodo from './editTodo';
+import { onDelete } from '../services';
+import { ITodos } from '../App';
 
-type IData = {
-  description: string;
-  todo_id: string;
-};
-
-const ListTodos = () => {
-  const [data, setData] = useState<IData[]>([]);
-
-  const onDelete = async (id: string) => {
-    try {
-      const res = await fetch('http://localhost:5000/todos/' + id, {
-        method: 'DELETE',
-      }).then((json) => json.json());
-      setData(data.filter((el) => el.todo_id !== id));
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getTodos = async () => {
-    try {
-      const res = await fetch('http://localhost:5000/todos').then((json) =>
-        json.json(),
-      );
-
-      setData(res.data as IData[]);
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getTodos();
-  }, []);
-
+const ListTodos = ({ todos, setTodos }: ITodos) => {
   return (
     <div>
       <table className='table mt-5 text-center'>
@@ -48,16 +15,25 @@ const ListTodos = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((el) => (
+          {todos?.map((el, index) => (
             <tr key={el.todo_id}>
               <td>{el.description}</td>
               <td>
-                <button className='btn'>Edit</button>
+                <EditTodo
+                  index={index}
+                  todo={el}
+                  todos={todos}
+                  setTodos={setTodos}
+                />
               </td>
               <td>
                 <button
                   className='btn btn-danger'
-                  onClick={() => onDelete(el.todo_id)}
+                  onClick={() =>
+                    onDelete(el.todo_id, (id: string) => {
+                      setTodos(todos.filter((el) => el.todo_id !== id));
+                    })
+                  }
                 >
                   Delete
                 </button>
@@ -65,7 +41,7 @@ const ListTodos = () => {
             </tr>
           ))}
         </tbody>
-      </table>{' '}
+      </table>
     </div>
   );
 };
