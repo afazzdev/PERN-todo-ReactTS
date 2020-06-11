@@ -18,6 +18,7 @@ const InputTodo = () => {
 
       console.log(response);
       setDescription('' as string);
+      window.location.href = '/';
     } catch (err) {
       console.log(err);
     }
